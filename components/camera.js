@@ -1,10 +1,10 @@
 import React, { useState, useEffect, createRef } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Camera } from "expo-camera";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-export default function camera() {
+export default function camera({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [photo, setPhoto] = useState("");
@@ -18,8 +18,8 @@ export default function camera() {
   }, []);
 
   useEffect(() => {
-    // console.log(photo);
-  }, [photo]);
+    photo && navigation.navigate("Result", { photo: photo });
+  });
 
   if (hasPermission === null) {
     return <View />;
@@ -47,72 +47,55 @@ export default function camera() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View>
-        {console.log(photo)}
-        {photo !== "" && <Image source={{ isStatic: true, uri: photo }} />}
-      </View>
       <Camera
-        style={{ flex: 1 }}
+        style={styles.camera}
         type={type}
         ref={ref => {
           camera = ref;
         }}
+      ></Camera>
+      <View
+        style={{
+          flex: 0.2,
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: "transparent",
+          flexDirection: "row"
+        }}
       >
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor: "transparent",
-            flexDirection: "row"
+        {/** choose from album */}
+        <TouchableOpacity
+          style={styles.album}
+          onPress={() => {
+            pickImage();
           }}
         >
-          {/** reverse the lens */}
-          <TouchableOpacity
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}
-            style={styles.flipIcon}
-          >
-            <Ionicons name="ios-reverse-camera" size={48} color="white" />
-          </TouchableOpacity>
+          <Ionicons name="ios-albums" size={36} color="black" />
+        </TouchableOpacity>
 
-          {/** take picture */}
-          <TouchableOpacity
-            onPress={() => takePicture()}
-            style={styles.cameraIcon}
-          >
-            <Ionicons
-              name="ios-camera"
-              size={48}
-              color="white"
-              onPress={() => {
-                takePicture();
-              }}
-            />
-          </TouchableOpacity>
+        {/** take picture */}
+        <TouchableOpacity
+          onPress={() => takePicture()}
+          style={styles.cameraIcon}
+        >
+          <Ionicons name="ios-camera" size={48} color="black" />
+        </TouchableOpacity>
 
-          {/** choose from album */}
-          <TouchableOpacity
-            style={styles.album}
-            onPress={() => {
-              pickImage();
-            }}
-          >
-            <Ionicons name="ios-albums" size={48} color="white" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
+        {/** barcode */}
+        <TouchableOpacity style={styles.barcode}>
+          <MaterialCommunityIcons name="barcode-scan" size={36} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  flipIcon: {
+  camera: {
+    flex: 0.7,
+    marginTop: 40
+  },
+  album: {
     flex: 0.1,
     alignSelf: "flex-end",
     alignItems: "center",
@@ -123,9 +106,9 @@ const styles = StyleSheet.create({
     flex: 0.1,
     alignSelf: "flex-end",
     alignItems: "center",
-    marginBottom: 40
+    marginBottom: 30
   },
-  album: {
+  barcode: {
     flex: 0.1,
     alignSelf: "flex-end",
     alignItems: "center",
