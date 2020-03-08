@@ -10,7 +10,12 @@ export default function Home({ navigation }) {
     <View style={{ flex: 1 }}>
       <Header />
       <DailyCarbon />
-      <TodayData navigation={navigation} />
+      <TodayData
+        navigation={navigation}
+        image={[
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
+        ]}
+      />
       <Footer screen={"home"} />
     </View>
   );

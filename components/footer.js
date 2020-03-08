@@ -1,12 +1,33 @@
 import React from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 
-export default function Footer() {
+export default function Footer({ screen }) {
   return (
     <View style={styles.container}>
-      <Text>footer</Text>
-      <Text>footer</Text>
-      <Text>footer</Text>
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 50,
+          backgroundColor: "#FC8685"
+        }}
+      ></View>
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 50,
+          backgroundColor: "#9C9C9C"
+        }}
+      ></View>
+      <View
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 50,
+          backgroundColor: "#9C9C9C"
+        }}
+      ></View>
     </View>
   );
 }
@@ -22,6 +43,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    backgroundColor: "#9C9C9C"
+    backgroundColor: "white"
   }
 });

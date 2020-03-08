@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Camera } from "expo-camera";
 import Footer from "./footer";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -81,7 +81,12 @@ export default function camera({ navigation }) {
             pickImage();
           }}
         >
-          <Ionicons name="ios-albums" size={36} color="black" />
+          <Ionicons
+            name="ios-albums"
+            size={52}
+            color="black"
+            style={{ opacity: 0.3 }}
+          />
         </TouchableOpacity>
 
         {/** take picture */}
@@ -89,12 +94,21 @@ export default function camera({ navigation }) {
           onPress={() => takePicture()}
           style={styles.cameraIcon}
         >
-          <MaterialCommunityIcons name="camera-iris" size={60} color="black" />
+          <MaterialCommunityIcons
+            name="camera-iris"
+            size={75}
+            color={`#FCA589`}
+          />
         </TouchableOpacity>
 
         {/** barcode */}
         <TouchableOpacity style={styles.barcode}>
-          <MaterialCommunityIcons name="barcode-scan" size={36} color="black" />
+          <MaterialCommunityIcons
+            name="barcode-scan"
+            size={52}
+            color="black"
+            style={{ opacity: 0.3 }}
+          />
         </TouchableOpacity>
       </View>
       <Footer />
@@ -106,23 +120,24 @@ const styles = StyleSheet.create({
   back: { marginBottom: 40, marginLeft: 30, position: "absolute", top: 46 },
   camera: {
     marginTop: 100,
+    marginBottom: 50,
     flex: 0.7
   },
   album: {
-    flex: 0.1,
+    flex: 0.3,
     alignSelf: "flex-end",
     alignItems: "center",
     marginBottom: 40,
     marginLeft: 30
   },
   cameraIcon: {
-    flex: 0.3,
+    flex: 0.4,
     alignSelf: "flex-end",
     alignItems: "center",
     marginBottom: 30
   },
   barcode: {
-    flex: 0.1,
+    flex: 0.3,
     alignSelf: "flex-end",
     alignItems: "center",
     marginBottom: 40,

@@ -5,10 +5,16 @@ import CarbonCard from "./carbonCard";
 export default function DailyCarbon() {
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 18, lineHeight: 21, marginBottom: 20 }}>
+      <Text
+        style={{
+          fontSize: 18,
+          lineHeight: 21,
+          marginBottom: 20,
+          fontWeight: "bold"
+        }}
+      >
         Daily Emission
       </Text>
-      <CarbonCard />
       <CarbonCard />
     </View>
   );

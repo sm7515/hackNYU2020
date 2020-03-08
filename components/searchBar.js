@@ -4,81 +4,121 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
   Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import FoodCard from "./foodCard";
+import CarbonInfo from "./carbonInfo";
+import { setDetectionImagesAsync } from "expo/build/AR";
 
-export default function SearchBar({ navigation, data }) {
+const { height } = Dimensions.get("window");
+let scrollEnabled = false;
+export default function SearchBar({ navigation, data, setdone }) {
   const [show, setShow] = useState(true);
+  const [foodCards, setFoodCards] = useState([]);
 
   const handlePress = () => {
     navigation.navigate("Search");
   };
 
-  const handleHide = () => {
-    setShow(false);
+  const addToCard = name => {
+    console.log(name);
+    const newarr = [...foodCards, { name: name, number: 1 }];
+    setdone(true);
+    setFoodCards(newarr);
   };
 
   const handleShow = () => {
-    setShow(false);
-  };
-
-  useEffect(() => {
     if (show) {
       setShow(false);
     } else {
       setShow(true);
     }
-  });
+  };
+
+  useEffect(() => {}, [show]);
+
+  useEffect(() => {}, [foodCards]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.suggestion}>
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 14,
-            lineHeight: 16,
-            marginBottom: 10,
-            width: Dimensions.get("window").width
-          }}
-        >
-          Select food in this picture:
-        </Text>
-        {show ? (
-          <TouchableOpacity
-            onPress={() => {
-              handleHide();
+    <ScrollView style={{ flex: 1, flexGrow: 1 }} scrollEnabled={true}>
+      <View style={styles.container}>
+        {foodCards.length !== 0 && <FoodCard foodName={foodCards}></FoodCard>}
+        <View style={show ? styles.suggestionShow : styles.suggestionHide}>
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: 23
             }}
           >
-            <Text>hide</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              handleShow();
-            }}
-          >
-            <Text>show</Text>
-          </TouchableOpacity>
-        )}
-        {data.map(ele => {
-          return ele.suggestion.map((item, i) => {
-            return (
-              <View key={i} style={styles.item}>
-                <TouchableOpacity>
-                  <Text style={{ fontSize: 14, lineHeight: 16 }}>{item}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          });
-        })}
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 14,
+                lineHeight: 16,
+                marginBottom: 10
+              }}
+            >
+              Select food in this picture:
+            </Text>
+            {show ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleShow();
+                }}
+              >
+                <Ionicons name="ios-arrow-down" size={20} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleShow();
+                }}
+              >
+                <Ionicons name="ios-arrow-up" size={20} />
+              </TouchableOpacity>
+            )}
+          </View>
+          {show &&
+            data.map(ele => {
+              return ele.suggestion.map((el, i) => {
+                return (
+                  <View key={i} style={styles.item}>
+                    <TouchableOpacity onPress={() => addToCard(el)}>
+                      <Text
+                        style={
+                          el === "Burger" || el === "French Fries"
+                            ? {
+                                color: "black",
+                                fontSize: 14,
+                                lineHeight: 16
+                              }
+                            : {
+                                fontSize: 14,
+                                lineHeight: 16,
+                                color: "#939393"
+                              }
+                        }
+                      >
+                        {el}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              });
+            })}
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => handlePress()}>
+          <Ionicons name="ios-search" size={20} color="#939393" />
+          <Text style={{ paddingLeft: 90, color: "#939393" }}>Search More</Text>
+        </TouchableOpacity>
+        {foodCards.length !== 0 && <CarbonInfo data={data}></CarbonInfo>}
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => handlePress()}>
-        <Ionicons name="ios-search" size={20} />
-        <Text style={{ paddingLeft: 90 }}>Search More</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -91,11 +131,22 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     flexWrap: "wrap"
   },
-  suggestion: {
+  suggestionShow: {
     flex: 0.6,
     flexDirection: "row",
     flexWrap: "wrap",
-    backgroundColor: "#D3D3D3",
+    backgroundColor: "white",
+    borderRadius: 6,
+    paddingTop: 12,
+    paddingLeft: 18,
+    paddingBottom: 11,
+    justifyContent: "flex-start"
+  },
+  suggestionHide: {
+    flex: 0.1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    backgroundColor: "white",
     borderRadius: 6,
     paddingTop: 12,
     paddingLeft: 18,
@@ -107,12 +158,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#E6E6E6",
     paddingTop: 3,
     paddingBottom: 3,
     paddingLeft: 10,
     paddingRight: 10,
-    marginBottom: 13,
+    marginBottom: 11,
     marginRight: 23
   },
   button: {
@@ -121,7 +172,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#D3D3D3",
+    backgroundColor: "white",
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 30,
