@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createRef } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Camera } from "expo-camera";
+import Footer from "./footer";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
@@ -29,24 +30,34 @@ export default function camera({ navigation }) {
   }
 
   const takePicture = async () => {
-    // console.log(camera);
     if (camera) {
-      camera.takePictureAsync({ skipProcessing: true }).then(data => {
-        setPhoto(data.uri);
-      });
+      camera
+        .takePictureAsync({ skipProcessing: true, base64: true })
+        .then(data => {
+          setPhoto(data.base64);
+        });
     }
   };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      // base64: true,
+      base64: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images
     });
-    setPhoto(result.uri);
+    setPhoto(result.base64);
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, flexDirection: "column" }}>
+      {/** go back */}
+      <TouchableOpacity
+        style={styles.back}
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      >
+        <Ionicons name="ios-arrow-round-back" size={36} color="black" />
+      </TouchableOpacity>
       <Camera
         style={styles.camera}
         type={type}
@@ -56,7 +67,7 @@ export default function camera({ navigation }) {
       ></Camera>
       <View
         style={{
-          flex: 0.2,
+          flex: 0.15,
           alignItems: "center",
           justifyContent: "space-between",
           backgroundColor: "transparent",
@@ -78,7 +89,7 @@ export default function camera({ navigation }) {
           onPress={() => takePicture()}
           style={styles.cameraIcon}
         >
-          <Ionicons name="ios-camera" size={48} color="black" />
+          <MaterialCommunityIcons name="camera-iris" size={60} color="black" />
         </TouchableOpacity>
 
         {/** barcode */}
@@ -86,14 +97,16 @@ export default function camera({ navigation }) {
           <MaterialCommunityIcons name="barcode-scan" size={36} color="black" />
         </TouchableOpacity>
       </View>
+      <Footer />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  back: { marginBottom: 40, marginLeft: 30, position: "absolute", top: 46 },
   camera: {
-    flex: 0.7,
-    marginTop: 40
+    marginTop: 100,
+    flex: 0.7
   },
   album: {
     flex: 0.1,
@@ -103,7 +116,7 @@ const styles = StyleSheet.create({
     marginLeft: 30
   },
   cameraIcon: {
-    flex: 0.1,
+    flex: 0.3,
     alignSelf: "flex-end",
     alignItems: "center",
     marginBottom: 30
