@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, Dimensions } from "react-native";
 import { SearchBar } from "react-native-elements";
-// import axios from "axios";
+import axios from "axios";
 
 export default function search({ data }) {
   const [input, setInput] = useState("");
@@ -13,9 +13,9 @@ export default function search({ data }) {
 
   const handleSubmit = e => {
     const query = e.nativeEvent.text;
-    // axios
-    //   .get(`http://localhost:3000/recipeId?name=${query}`)
-    //   .then(res => console.log(res));
+    axios
+      .get(`http://localhost:3000/recipeId?name=${query}`)
+      .then(res => console.log(res));
   };
 
   return (
